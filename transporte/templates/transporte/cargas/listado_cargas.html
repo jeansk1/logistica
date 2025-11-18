@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cargas — Logística Global</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #f8f9fa; }
+        .table-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,.08);
+        }
+        .title { 
+            font-weight: 700; 
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 600;
+        }
+        .table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="title m-0">
+            <i class="fas fa-box me-2"></i>Cargas
+        </h2>
+        <a href="{% url 'transporte:carga_crear' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Nueva Carga
+        </a>
+    </div>
+
+    <div class="table-container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <form class="d-flex" method="get" style="flex: 1; max-width: 400px;">
+                <input class="form-control me-2" type="search" name="q" placeholder="Buscar cargas..." value="{{ request.GET.q }}">
+                <button class="btn btn-outline-primary" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+            <span class="text-muted">{{ cargas.count }} cargas</span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Descripción</th>
+                        <th>Peso</th>
+                        <th>Tipo</th>
+                        <th>Cliente</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in cargas %}
+                    <tr>
+                        <td><strong>{{ c.id }}</strong></td>
+                        <td>
+                            <small>{{ c.descripcion|truncatewords:4 }}</small>
+                        </td>
+                        <td><strong>{{ c.peso_kg }} kg</strong></td>
+                        <td>{{ c.tipo_mercancia }}</td>
+                        <td>
+                            <div class="fw-bold">{{ c.cliente.nombre }}</div>
+                            <small class="text-muted">{{ c.cliente.rut }}</small>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'transporte:carga_detalle' c.id %}" class="btn btn-outline-info">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'transporte:carga_editar' c.id %}" class="btn btn-outline-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'transporte:carga_eliminar' c.id %}" class="btn btn-outline-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <i class="fas fa-box fa-2x text-muted mb-3"></i>
+                            <p class="text-muted mb-0">No hay cargas registradas</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

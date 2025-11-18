@@ -1,0 +1,323 @@
+{% extends 'transporte/base.html' %}
+
+{% block title %}Dashboard - Sistema de Logística{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-1 fw-bold">Dashboard de Logística</h1>
+        <p class="text-muted mb-0">Resumen ejecutivo y métricas clave</p>
+    </div>
+    <div class="text-end">
+        <span class="badge bg-success fs-6">
+            <i class="fas fa-circle me-1"></i>Sistema Activo
+        </span>
+    </div>
+</div>
+
+<!-- Tarjetas de Resumen Principal -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs fw-bold text-primary text-uppercase mb-1">
+                            Total Despachos
+                        </div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">{{ total_despachos }}</div>
+                        <div class="mt-2">
+                            <span class="badge bg-success">
+                                <i class="fas fa-arrow-up me-1"></i>12%
+                            </span>
+                            <small class="text-muted ms-1">vs mes anterior</small>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-shipping-fast fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs fw-bold text-success text-uppercase mb-1">
+                            Cargas Activas
+                        </div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">{{ total_cargas }}</div>
+                        <div class="mt-2">
+                            <span class="badge bg-warning text-dark">
+                                <i class="fas fa-clock me-1"></i>En tránsito
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-boxes fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs fw-bold text-info text-uppercase mb-1">
+                            Flota Total
+                        </div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">{{ total_vehiculos|add:total_aeronaves }}</div>
+                        <div class="mt-2">
+                            <small class="text-muted">{{ total_vehiculos }} terrestres / {{ total_aeronaves }} aéreas</small>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-truck-plane fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs fw-bold text-warning text-uppercase mb-1">
+                            Personal Activo
+                        </div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">{{ total_conductores|add:total_pilotos }}</div>
+                        <div class="mt-2">
+                            <small class="text-muted">{{ total_conductores }} conductores / {{ total_pilotos }} pilotos</small>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Segunda Fila: Métricas Específicas -->
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <!-- Gráfico de Distribución (Placeholder) -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <h6 class="m-0 fw-bold text-primary">Distribución de Operaciones</h6>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-calendar me-1"></i>Este Mes
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Esta Semana</a></li>
+                        <li><a class="dropdown-item" href="#">Este Mes</a></li>
+                        <li><a class="dropdown-item" href="#">Este Año</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-4 mb-3">
+                        <div class="card bg-light border-0">
+                            <div class="card-body">
+                                <i class="fas fa-truck fa-2x text-success mb-2"></i>
+                                <h4 class="text-success">{{ total_vehiculos }}</h4>
+                                <p class="mb-0">Transporte Terrestre</p>
+                                <small class="text-muted">Vehículos activos</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card bg-light border-0">
+                            <div class="card-body">
+                                <i class="fas fa-plane fa-2x text-warning mb-2"></i>
+                                <h4 class="text-warning">{{ total_aeronaves }}</h4>
+                                <p class="mb-0">Transporte Aéreo</p>
+                                <small class="text-muted">Aeronaves activas</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card bg-light border-0">
+                            <div class="card-body">
+                                <i class="fas fa-route fa-2x text-info mb-2"></i>
+                                <h4 class="text-info">{{ total_rutas }}</h4>
+                                <p class="mb-0">Rutas Activas</p>
+                                <small class="text-muted">Conexiones</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Resumen de Estado -->
+        <div class="card shadow h-100">
+            <div class="card-header py-3">
+                <h6 class="m-0 fw-bold text-primary">Estado del Sistema</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Capacidad Flota</span>
+                        <span class="fw-bold text-success">85%</span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-success" style="width: 85%"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Personal Activo</span>
+                        <span class="fw-bold text-info">92%</span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-info" style="width: 92%"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Rutas Cubiertas</span>
+                        <span class="fw-bold text-warning">78%</span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-warning" style="width: 78%"></div>
+                    </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-light rounded">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-check-circle text-success fa-2x me-3"></i>
+                        <div>
+                            <h6 class="mb-0">Sistema Operativo</h6>
+                            <small class="text-muted">Todos los servicios funcionando</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tercera Fila: Acciones Rápidas y Estadísticas -->
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 fw-bold text-primary">Acciones Rápidas</h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <a href="{% url 'transporte:despacho_crear' %}" class="btn btn-outline-primary w-100 h-100 py-3">
+                            <i class="fas fa-plus-circle fa-2x mb-2"></i><br>
+                            Nuevo Despacho
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{% url 'transporte:carga_crear' %}" class="btn btn-outline-success w-100 h-100 py-3">
+                            <i class="fas fa-box fa-2x mb-2"></i><br>
+                            Nueva Carga
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{% url 'transporte:cliente_crear' %}" class="btn btn-outline-info w-100 h-100 py-3">
+                            <i class="fas fa-user-plus fa-2x mb-2"></i><br>
+                            Nuevo Cliente
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{% url 'transporte:ruta_crear' %}" class="btn btn-outline-warning w-100 h-100 py-3">
+                            <i class="fas fa-route fa-2x mb-2"></i><br>
+                            Nueva Ruta
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <h6 class="m-0 fw-bold text-primary">Resumen por Categoría</h6>
+                <span class="badge bg-primary">Completo</span>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-4 mb-3">
+                        <div class="border-end">
+                            <h3 class="text-primary fw-bold">{{ total_clientes }}</h3>
+                            <small class="text-muted">Clientes</small>
+                        </div>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <div class="border-end">
+                            <h3 class="text-success fw-bold">{{ total_rutas }}</h3>
+                            <small class="text-muted">Rutas</small>
+                        </div>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <h3 class="text-warning fw-bold">{{ total_cargas }}</h3>
+                        <small class="text-muted">Cargas</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="border-end">
+                            <h3 class="text-info fw-bold">{{ total_conductores }}</h3>
+                            <small class="text-muted">Conductores</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="border-end">
+                            <h3 class="text-danger fw-bold">{{ total_pilotos }}</h3>
+                            <small class="text-muted">Pilotos</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="text-dark fw-bold">{{ total_aeronaves }}</h3>
+                        <small class="text-muted">Aeronaves</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        border: none;
+    }
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+    }
+    .border-start-primary { border-left: 4px solid #4e73df !important; }
+    .border-start-success { border-left: 4px solid #1cc88a !important; }
+    .border-start-info { border-left: 4px solid #36b9cc !important; }
+    .border-start-warning { border-left: 4px solid #f6c23e !important; }
+    .text-gray-800 { color: #5a5c69 !important; }
+    .text-gray-300 { color: #dddfeb !important; }
+    .btn-outline-primary, .btn-outline-success, .btn-outline-info, .btn-outline-warning {
+        transition: all 0.3s ease;
+    }
+    .btn-outline-primary:hover, .btn-outline-success:hover, 
+    .btn-outline-info:hover, .btn-outline-warning:hover {
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}

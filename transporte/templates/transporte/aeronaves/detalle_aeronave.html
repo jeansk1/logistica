@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Aeronave — Logística Global</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #f8f9fa; }
+        .detail-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,.08);
+        }
+        .detail-title {
+            color: #2c3e50;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        .info-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 2rem;
+        }
+        .section-title {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .badge-estado {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 25px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="detail-container">
+            <h3 class="detail-title">
+                <i class="fas fa-plane me-2"></i>Detalle de la Aeronave #{{ aeronave.id }}
+            </h3>
+
+            <!-- Información General -->
+            <div class="info-card">
+                <h5 class="section-title">Información General</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <strong>Matrícula:</strong>
+                        <div class="fs-5">{{ aeronave.matricula }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Tipo:</strong>
+                        <div>{{ aeronave.tipo_aeronave }}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Capacidad:</strong>
+                        <div class="fs-5">{{ aeronave.capacidad_kg }} kg</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Estado:</strong>
+                        <div>
+                            {% if aeronave.activo %}
+                                <span class="badge bg-success badge-estado">
+                                    <i class="fas fa-check-circle me-1"></i>Activa
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary badge-estado">
+                                    <i class="fas fa-times-circle me-1"></i>Inactiva
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Despachos Aéreos Asociados -->
+            <div class="info-card">
+                <h5 class="section-title">Despachos Aéreos Asociados</h5>
+                {% if aeronave.despachos.all %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th># Despacho</th>
+                                    <th>Ruta</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for d in aeronave.despachos.all %}
+                                <tr>
+                                    <td><strong>#{{ d.id }}</strong></td>
+                                    <td>{{ d.ruta.origen }} → {{ d.ruta.destino }}</td>
+                                    <td>{{ d.fecha_despacho|date:"d/m/Y" }}</td>
+                                    <td>
+                                        {% if d.estado == "PENDIENTE" %}
+                                            <span class="badge bg-warning">Pendiente</span>
+                                        {% elif d.estado == "EN RUTA" %}
+                                            <span class="badge bg-primary">En Ruta</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Entregado</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'transporte:despacho_detalle' d.id %}" class="btn btn-sm btn-outline-info">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-3">
+                        <i class="fas fa-paper-plane fa-2x text-muted mb-2"></i>
+                        <p class="text-muted mb-0">Esta aeronave no registra despachos asociados</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="d-flex gap-2 pt-3">
+                <a href="{% url 'transporte:aeronave_editar' aeronave.id %}" class="btn btn-warning">
+                    <i class="fas fa-edit me-2"></i>Editar
+                </a>
+                <a href="{% url 'transporte:aeronave_eliminar' aeronave.id %}" class="btn btn-danger">
+                    <i class="fas fa-trash me-2"></i>Eliminar
+                </a>
+                <a href="{% url 'transporte:aeronaves_listado' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Volver
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
